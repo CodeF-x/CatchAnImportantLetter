@@ -14,13 +14,12 @@ class SMSService:
     @classmethod
     async def send(self, phone):
         URL = f"https://{self.EMAIL}:{self.API}@gate.smsaero.ru/v2/sms/send"
-        text = "От поймай важное письмо:\n Обнаружено срочное сообщение! Детали в боте."
+        text = "От поймай важное письмо:\nОбнаружено срочное сообщение! Детали в боте."
         params = {
             "number": phone,
             "text": text,
             "sign": "SMS Aero",
         }
-
         async with httpx.AsyncClient() as client:
             try:
                 response = await client.get(URL, params=params)
