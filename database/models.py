@@ -25,9 +25,8 @@ class User(Base):
     include_prompt: Mapped[str] = mapped_column(String(255), nullable=True)
     exclude_prompt: Mapped[str] = mapped_column(String(255), nullable=True)
     save_midle: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
-    mail_connected: Mapped[bool] = mapped_column(Boolean, nullable=True)
-    AI_connected: Mapped[bool] = mapped_column(Boolean, nullable=True)
     last_saved: Mapped[int] = mapped_column(BigInteger, nullable=True)
+
 
 class Message(Base):
     __tablename__ = 'messages'
@@ -56,6 +55,16 @@ class Consent(Base):
     action: Mapped[str] = mapped_column(String(255), nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now())
     consent_text_version: Mapped[str] = mapped_column(String(255), nullable=False)
+
+
+class Politics_consent(Base):
+    __tablename__ = 'Politics_consent'
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    telegram_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    action: Mapped[str] = mapped_column(String(255), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.now())
+    consent_text_version: Mapped[str] = mapped_column(String(255), nullable=False)
+
 
 async def init_db():
     async with engine.begin() as conn:

@@ -10,6 +10,8 @@ from dotenv import load_dotenv
 from database.repository import save_message
 
 load_dotenv()
+
+
 class AI:
     @staticmethod
     def system_prompt(current_time, in_prompt, ex_prompt):

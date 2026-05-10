@@ -2,6 +2,7 @@ from aiogram import Router, types, F
 from aiogram.fsm.context import FSMContext
 from dotenv import load_dotenv
 
+from handlers.common import confirm_message
 from keyboards.inline import params_keyboard
 from services.ai import AI
 from states.input import Params
@@ -19,10 +20,13 @@ callback_data = "exclude_params"
 async def show_params(message: types.Message):
     user = await get_user_from_db(message.from_user.id)
     if user == None:
-        await set_user(message.from_user.id)
-        user = await get_user_from_db(message.from_user.id)
-    host = Mail.get_imap_host(user.email_adress)
-    mail_status = await Mail.check_connection(host, user.email_adress, user.email_password)
+        await confirm_message(message)
+        return
+    if user.email_adress != None and user.email_password != None:
+        host = Mail.get_imap_host(user.email_adress)
+        mail_status = await Mail.check_connection(host, user.email_adress, user.email_password)
+    else:
+        mail_status = False
     ai_status = await AI.health_check()
     include_text = user.include_prompt if (user.include_prompt != None) else "пусто"
     exclude_text = user.exclude_prompt if (user.exclude_prompt != None) else "пусто"
@@ -43,10 +47,13 @@ async def show_params(message: types.Message):
 async def refresh_params(callback: types.CallbackQuery):
     user = await get_user_from_db(callback.from_user.id)
     if user == None:
-        await set_user(callback.from_user.id)
-        user = await get_user_from_db(callback.from_user.id)
-    host = Mail.get_imap_host(user.email_adress)
-    mail_status = await Mail.check_connection(host, user.email_adress, user.email_password)
+        await confirm_message(callback)
+        return
+    if user.email_adress != None and user.email_password != None:
+        host = Mail.get_imap_host(user.email_adress)
+        mail_status = await Mail.check_connection(host, user.email_adress, user.email_password)
+    else:
+        mail_status = False
     ai_status = await AI.health_check()
     include_text = user.include_prompt if (user.include_prompt != None) else "пусто"
     exclude_text = user.exclude_prompt if (user.exclude_prompt != None) else "пусто"
@@ -73,8 +80,8 @@ async def refresh_params(callback: types.CallbackQuery):
 async def save_midle(callback: types.CallbackQuery):
     user = await get_user_from_db(callback.from_user.id)
     if user == None:
-        await set_user(callback.from_user.id)
-        user = await get_user_from_db(callback.from_user.id)
+        await confirm_message(callback)
+        return
     save = True
     if user.save_midle:
         save = False
@@ -84,6 +91,10 @@ async def save_midle(callback: types.CallbackQuery):
 
 @router.callback_query(F.data == "include_params")
 async def write_in_params(callback: types.CallbackQuery, state: FSMContext):
+    user = await get_user_from_db(callback.from_user.id)
+    if user == None:
+        await confirm_message(callback)
+        return
     await callback.message.answer("Введите темы, которые важны для вас в письмах")
     await state.set_state(Params.waiting_for_in_prompt)
     await callback.answer()
@@ -91,6 +102,10 @@ async def write_in_params(callback: types.CallbackQuery, state: FSMContext):
 
 @router.message(Params.waiting_for_in_prompt)
 async def get_in_params(message: types.Message, state: FSMContext):
+    user = await get_user_from_db(message.from_user.id)
+    if user == None:
+        await confirm_message(message)
+        return
     await set_in_prompt(message.from_user.id, message.text)
     await message.answer("Ваши пожелания учтены")
     await state.clear()
@@ -98,6 +113,10 @@ async def get_in_params(message: types.Message, state: FSMContext):
 
 @router.callback_query(F.data == "exclude_params")
 async def write_ex_params(callback: types.CallbackQuery, state: FSMContext):
+    user = await get_user_from_db(callback.from_user.id)
+    if user == None:
+        await confirm_message(callback)
+        return
     await callback.message.answer("Введите темы, которые вам не так важны в письмах")
     await state.set_state(Params.waiting_for_ex_prompt)
     await callback.answer()
@@ -105,6 +124,10 @@ async def write_ex_params(callback: types.CallbackQuery, state: FSMContext):
 
 @router.message(Params.waiting_for_ex_prompt)
 async def get_ex_params(message: types.Message, state: FSMContext):
+    user = await get_user_from_db(message.from_user.id)
+    if user == None:
+        await confirm_message(message)
+        return
     await set_ex_prompt(message.from_user.id, message.text)
     await message.answer("Ваши пожелания учтены")
     await state.clear()

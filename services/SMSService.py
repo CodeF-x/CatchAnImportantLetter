@@ -1,3 +1,4 @@
+import logging
 import os
 
 import httpx
@@ -29,5 +30,5 @@ class SMSService:
                 else:
                     return False
             except Exception as e:
-                print(f"Ошибка сети: {e}")
+                logging.getLogger(__name__).error(f"Ошибка сети: {e}")
                 return False

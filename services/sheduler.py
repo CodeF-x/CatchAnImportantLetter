@@ -1,3 +1,5 @@
+import logging
+
 from database.repository import get_all_active_users_from_db, set_last_saved
 from services.SMSService import SMSService
 from services.mail import Mail
@@ -21,7 +23,7 @@ async def check_emails_job(bot: Bot):
                     if extreme:
                         await SMSService.send(user.phone_number)
             except Exception as e:
-                print(e)
+                logging.getLogger(__name__).error(e)
                 return
         if last_checked != -1:
             await set_last_saved(user.telegram_id, last_checked)

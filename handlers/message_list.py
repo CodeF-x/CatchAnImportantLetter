@@ -3,11 +3,12 @@ from datetime import datetime
 from aiogram import Router, types, F
 from aiogram.fsm.context import FSMContext
 
+from handlers.common import confirm_message
 from keyboards.inline import list_keyboard
 
 from dotenv import load_dotenv
 
-from database.repository import get_all_messages_from_db, del_message
+from database.repository import get_all_messages_from_db, del_message, get_user_from_db
 
 from states.input import Message_list
 
@@ -17,6 +18,10 @@ load_dotenv()
 
 @router.message(F.text == "📋 Список важных писем")
 async def show_list(message: types.Message):
+    user = await get_user_from_db(message.from_user.id)
+    if user == None:
+        await confirm_message(message)
+        return
     answer = "Cписок важных сообщений:\n\n"
     messages = await get_all_messages_from_db(message.from_user.id)
     for item in messages:
@@ -49,6 +54,10 @@ async def show_list(message: types.Message):
 
 @router.callback_query(F.data == "delete_message")
 async def delete_message(callback: types.CallbackQuery, state: FSMContext):
+    user = await get_user_from_db(callback.from_user.id)
+    if user == None:
+        await confirm_message(callback)
+        return
     await callback.message.answer(
         "Введите номер письма, которое нужно удалить")
     await state.set_state(Message_list.waiting_for_del_message)
@@ -57,6 +66,11 @@ async def delete_message(callback: types.CallbackQuery, state: FSMContext):
 
 @router.message(Message_list.waiting_for_del_message)
 async def get_in_params(message: types.Message, state: FSMContext):
+    user = await get_user_from_db(message.from_user.id)
+    if user == None:
+        await confirm_message(message)
+        return
+
     try:
         number = int(message.text)
     except:

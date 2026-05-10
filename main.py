@@ -14,7 +14,6 @@ async def main():
     load_dotenv()
     await init_db()
     token = os.getenv("TG_TOKEN")
-    print(f"Пароль загружен")
     logging.basicConfig(level=logging.INFO)
     bot = Bot(token=token)
     dp = Dispatcher()

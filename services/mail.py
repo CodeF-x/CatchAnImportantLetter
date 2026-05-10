@@ -1,3 +1,5 @@
+import logging
+
 from imap_tools import MailBox, AND
 
 IMAP_PROVIDERS = {
@@ -33,7 +35,7 @@ class Mail:
                         "date": msg.date
                     })
         except Exception as e:
-            print(f"Ошибка при работе с почтой: {e}")
+            logging.getLogger(__name__).error(f"Ошибка при работе с почтой: {e}")
         return emails, last_checked
 
     @staticmethod
@@ -49,7 +51,7 @@ class Mail:
                 msg = next(mailbox.fetch(limit=1, reverse=True), None)
                 last_uid = int(msg.uid) if msg else -1
         except Exception as e:
-            print(f"Ошибка при работе с почтой: {e}")
+            logging.getLogger(__name__).error(f"Ошибка при работе с почтой: {e}")
         return last_uid
 
     @staticmethod

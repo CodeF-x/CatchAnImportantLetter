@@ -18,5 +18,3 @@ async def phone_keyboard():
         request_contact=True
     ))
     return builder.as_markup(resize_keyboard=True, one_time_keyboard=True)
-
-
