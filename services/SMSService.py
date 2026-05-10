@@ -14,7 +14,7 @@ class SMSService:
     @classmethod
     async def send(self, phone):
         URL = f"https://{self.EMAIL}:{self.API}@gate.smsaero.ru/v2/sms/send"
-        text = "Пришло важное сообшение!"
+        text = "От поймай важное письмо:\n Обнаружено срочное сообщение! Детали в боте."
         params = {
             "number": phone,
             "text": text,
