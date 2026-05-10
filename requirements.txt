@@ -1,0 +1,10 @@
+dotenv
+python-dotenv
+aiogram
+asyncpg
+SQLAlchemy
+cryptography
+imap-tools
+requests
+openai
+apscheduler

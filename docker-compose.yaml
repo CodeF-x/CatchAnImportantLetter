@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:12
+    container_name: CatchLetter_db
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: bot_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  bot:
+    build: .
+    container_name: CatchLetter_bot
+    restart: always
+    depends_on:
+      - db
+    env_file:
+      - .env
+
+volumes:
+  pgdata:
