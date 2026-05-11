@@ -94,7 +94,6 @@ async def check_now(message: types.Message):
         emails_cut = emails[i:i + 5]
         try:
             ai_answer = await AI.send_to_ai(emails_cut, user.include_prompt, user.exclude_prompt)
-            logger.info(ai_answer)
             text, empty, for_sms = await AI.save_ai_result(ai_answer, user.telegram_id, save_midle=user.last_saved, )
             if last_checked != -1:
                 await set_last_saved(user.telegram_id, last_checked)
