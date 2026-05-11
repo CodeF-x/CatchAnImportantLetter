@@ -6,6 +6,7 @@ IMAP_PROVIDERS = {
     'gmail.com': 'imap.gmail.com',
     'yandex.ru': 'imap.yandex.ru',
     'yandex.by': 'imap.yandex.ru',
+    'edu.hse.ru': 'imap.yandex.ru',
     'mail.ru': 'imap.mail.ru',
     'list.ru': 'imap.mail.ru',
     'bk.ru': 'imap.mail.ru',

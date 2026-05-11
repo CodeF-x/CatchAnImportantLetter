@@ -18,7 +18,7 @@ router = Router()
 load_dotenv()
 
 domains = ['@gmail.com', '@yandex.ru', '@yandex.by', '@mail.ru', '@list.ru', '@bk.ru', '@inbox.ru', '@outlook.com',
-           '@icloud.com']
+           '@icloud.com', '@edu.hse.ru']
 
 
 def fix_number(number: str):
